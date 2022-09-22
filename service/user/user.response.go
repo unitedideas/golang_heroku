@@ -3,7 +3,7 @@ package _user
 import "github.com/ydhnwb/golang_heroku/entity"
 
 type UserResponse struct {
-	ID    int64  `json:"id"`
+	ID    int64  `json:"id" gorm:"PrimaryKey"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Token string `json:"token,omitempty"`

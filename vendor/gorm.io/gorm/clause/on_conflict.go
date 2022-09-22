@@ -3,6 +3,7 @@ package clause
 type OnConflict struct {
 	Columns      []Column
 	Where        Where
+	TargetWhere  Where
 	OnConstraint string
 	DoNothing    bool
 	DoUpdates    Set
@@ -26,6 +27,12 @@ func (onConflict OnConflict) Build(builder Builder) {
 		builder.WriteString(`) `)
 	}
 
+	if len(onConflict.TargetWhere.Exprs) > 0 {
+		builder.WriteString(" WHERE ")
+		onConflict.TargetWhere.Build(builder)
+		builder.WriteByte(' ')
+	}
+
 	if onConflict.OnConstraint != "" {
 		builder.WriteString("ON CONSTRAINT ")
 		builder.WriteString(onConflict.OnConstraint)
@@ -40,7 +47,7 @@ func (onConflict OnConflict) Build(builder Builder) {
 	}
 
 	if len(onConflict.Where.Exprs) > 0 {
-		builder.WriteString("WHERE ")
+		builder.WriteString(" WHERE ")
 		onConflict.Where.Build(builder)
 		builder.WriteByte(' ')
 	}
